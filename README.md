@@ -40,7 +40,8 @@ conda activate myenv
 
 ## Run the code
 To run a single experiment, you can directly call the Python script with desired arguments. For example:
-```bashpython private_batch.py --tuning full --peft lora --epochs 30 --use_dp
+```bash
+python private_batch.py --tuning full --peft lora --epochs 30 --use_dp
 ```
 
 Or you may use the batch script that runs different types of experiments.
