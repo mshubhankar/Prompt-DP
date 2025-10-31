@@ -9,6 +9,7 @@ import torch.nn as nn
 
 # CLI args
 parser = argparse.ArgumentParser(description="DP prompt/PEFT training for tinyBERT")
+parser.add_argument("--dataset", type=str, default="sst2", help="dataset name (options: sst2, qnli)")
 parser.add_argument("--tuning", type=str, default="full", choices=["soft", "full", "prefix", "last"])
 parser.add_argument("--peft", type=str, default=None, choices=[None, "lora", "ia3"])
 parser.add_argument("--use_dp", action="store_true", help="enable differential privacy (private_transformers)")
@@ -17,6 +18,7 @@ parser.add_argument("--batch_size", type=int, default=1024)
 parser.add_argument("--epochs", type=int, default=30)
 parser.add_argument("--promptlength", type=int, default=10)
 parser.add_argument("--lr", type=float, default=5e-3)
+
 args = parser.parse_args()
 
 tuning = args.tuning  # options: "soft" or "full" or "prefix" or "last"
@@ -26,8 +28,8 @@ peft = args.peft  # options: "lora" or "ia3"
 use_dp = args.use_dp
 target_epsilon = args.target_epsilon
 
-# Load the SST-2 dataset
-dataset = load_dataset("glue", "qnli")
+# Load the dataset
+dataset = load_dataset("glue", args.dataset)
 tokenizer = BertTokenizer.from_pretrained("prajjwal1/bert-tiny")
 
 def tokenize_function(examples):

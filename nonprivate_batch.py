@@ -25,8 +25,8 @@ class SoftPrompt(nn.Module):
         idx = torch.arange(self.prompt_length, device=dev).unsqueeze(0).expand(batch_size, -1)
         return self.embedding(idx)  # [batch, prompt_length, hidden]
 
-def prepare_data(max_length=64):
-    dataset = load_dataset("glue", "qnli")
+def prepare_data(dataset_name, max_length=64):
+    dataset = load_dataset("glue", dataset_name)
     tokenizer = BertTokenizer.from_pretrained("prajjwal1/bert-tiny")
     def tokenize_function(examples):
         return tokenizer(examples["sentence"], padding="max_length", truncation=True, max_length=max_length)
@@ -229,6 +229,7 @@ def evaluate_model(model, eval_loader, device):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", type=str, default="sst2", help="dataset name (options: sst2, qnli)")
     parser.add_argument("--tuning", type=str, default="soft", choices=["full","soft","prefix","last"])
     parser.add_argument("--peft", type=str, default=None, choices=[None,"lora","ia3"])
     parser.add_argument("--epochs", type=int, default=100)
@@ -237,7 +238,7 @@ def main():
     args = parser.parse_args()
 
     device = device_choice()
-    train_ds, eval_ds = prepare_data()
+    train_ds, eval_ds = prepare_data(args.dataset)
     batch_size = 1024
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=batch_size, shuffle=True, drop_last=True)
     eval_loader = torch.utils.data.DataLoader(eval_ds, batch_size=batch_size)

@@ -41,8 +41,10 @@ conda activate myenv
 ## Run the code
 To run a single experiment, you can directly call the Python script with desired arguments. For example:
 ```bash
-python private_batch.py --tuning full --peft lora --epochs 30 --use_dp
+python private_batch.py --dataset sst2 --tuning full --peft lora --epochs 30 --use_dp
 ```
+
+The current options for `--dataset` are `sst2` and `qnli`.
 
 Or you may use the batch script that runs different types of experiments.
 Make the script executable and run it, or run it with bash:
